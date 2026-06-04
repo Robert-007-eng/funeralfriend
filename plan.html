@@ -1010,11 +1010,11 @@
 
     const planData = collectPlanData();
 
-    const { data: existing } = await supabaseClient
+    const { data: existing, error: fetchError } = await supabaseClient
       .from('plans')
       .select('id')
       .eq('user_id', session.user.id)
-      .single();
+      .maybeSingle();
 
     let error;
     if (existing) {
@@ -1054,7 +1054,7 @@
       .from('plans')
       .select('plan_data')
       .eq('user_id', session.user.id)
-      .single();
+      .maybeSingle();
 
     if (data && data.plan_data) {
       restorePlanData(data.plan_data);
