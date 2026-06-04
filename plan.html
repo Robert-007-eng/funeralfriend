@@ -934,32 +934,141 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGpuY2Vka3FveHZveWFsY2hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1Njc3NDUsImV4cCI6MjA5NjE0Mzc0NX0.sdbKhWWvttWBFPcB-xNL0I-dCHGw-qdCe7aumPVtHNU';
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'funeralfriend-auth', storage: window.localStorage } });
 
-  async function checkSession() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (!session) {
-      window.location.href = 'login.html';
-    }
-  }
-
   async function logOut() {
     await supabaseClient.auth.signOut();
     window.location.href = 'index.html';
+  }
+
+  function collectPlanData() {
+    const data = {};
+
+    // Text inputs and textareas
+    document.querySelectorAll('.field-input[id]').forEach(el => {
+      data[el.id] = el.value;
+    });
+
+    // Music list
+    const musicInputs = document.querySelectorAll('#music-list input');
+    data['music'] = Array.from(musicInputs).map(i => i.value).filter(v => v.trim() !== '');
+
+    // Selected option buttons — store label text of selected button per field group
+    document.querySelectorAll('.field-group').forEach((group, i) => {
+      const selected = group.querySelector('.option-btn.selected-yes, .option-btn.selected-no, .option-btn.selected-unsure');
+      if (selected) {
+        const label = group.querySelector('.field-label');
+        if (label) {
+          data['option_' + label.textContent.trim().replace(/\s+/g, '_').toLowerCase()] = selected.textContent.trim();
+        }
+      }
+    });
+
+    return data;
+  }
+
+  function restorePlanData(data) {
+    if (!data) return;
+
+    // Restore text inputs
+    Object.keys(data).forEach(key => {
+      const el = document.getElementById(key);
+      if (el && el.classList.contains('field-input')) {
+        el.value = data[key];
+      }
+    });
+
+    // Restore music
+    if (data.music && data.music.length > 0) {
+      const list = document.getElementById('music-list');
+      const inputs = list.querySelectorAll('input');
+      data.music.forEach((song, i) => {
+        if (i < inputs.length) {
+          inputs[i].value = song;
+        } else {
+          addSong();
+          const newInputs = list.querySelectorAll('input');
+          newInputs[newInputs.length - 1].value = song;
+        }
+      });
+    }
   }
 
   async function savePlan() {
     const btn = document.querySelector('.save-btn');
     btn.textContent = 'Saving...';
     btn.disabled = true;
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const planData = collectPlanData();
+
+    const { data: existing } = await supabaseClient
+      .from('plans')
+      .select('id')
+      .eq('user_id', session.user.id)
+      .single();
+
+    let error;
+    if (existing) {
+      const result = await supabaseClient
+        .from('plans')
+        .update({ plan_data: planData, updated_at: new Date().toISOString() })
+        .eq('user_id', session.user.id);
+      error = result.error;
+    } else {
+      const result = await supabaseClient
+        .from('plans')
+        .insert({ user_id: session.user.id, plan_data: planData });
+      error = result.error;
+    }
+
+    if (error) {
+      btn.textContent = 'Save failed — try again';
+      btn.disabled = false;
+      return;
+    }
+
+    btn.textContent = 'Saved ✓';
     setTimeout(() => {
-      btn.textContent = 'Saved ✓';
-      setTimeout(() => {
-        btn.textContent = 'Save progress';
-        btn.disabled = false;
-      }, 2000);
-    }, 800);
+      btn.textContent = 'Save progress';
+      btn.disabled = false;
+    }, 2000);
   }
 
-  checkSession();
+  async function loadPlan() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const { data } = await supabaseClient
+      .from('plans')
+      .select('plan_data')
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (data && data.plan_data) {
+      restorePlanData(data.plan_data);
+    }
+  }
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') {
+      window.location.href = 'login.html';
+    }
+  });
+
+  supabaseClient.auth.getSession().then(({ data: { session } }) => {
+    if (!session) {
+      window.location.href = 'login.html';
+    } else {
+      loadPlan();
+    }
+  });
 </script>
 </body>
 </html>
