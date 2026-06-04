@@ -232,7 +232,7 @@
 <script>
   const SUPABASE_URL = 'https://jjtjncedkqoxvoyalchc.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGpuY2Vka3FveHZveWFsY2hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1Njc3NDUsImV4cCI6MjA5NjE0Mzc0NX0.sdbKhWWvttWBFPcB-xNL0I-dCHGw-qdCe7aumPVtHNU';
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'funeralfriend-auth', storage: window.localStorage } });
 
   function showError(msg) {
     const el = document.getElementById('error-msg');
