@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuneralFriend — Send Your Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #faf8f4;
+    --sky-light: #deeaf5;
+    --sky-mid: #b8d4ea;
+    --sky-deep: #7aaecf;
+    --text-dark: #2c2c2c;
+    --text-mid: #5a5a5a;
+    --text-light: #8a8a8a;
+    --border: #e8e2d9;
+    --white: #ffffff;
+    --green: #7cb87c;
+  }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .logo span { color: var(--sky-deep); }
+
+  .nav-right {
+    font-size: 12px;
+    color: var(--text-light);
+    letter-spacing: 0.04em;
+  }
+
+  /* HERO */
+  .page-hero {
+    background: linear-gradient(180deg, #c9dff2 0%, #eef4fa 60%, #faf8f4 100%);
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+
+  .page-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 300;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .page-hero p {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.8;
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+
+  /* POSTCODE BOX */
+  .postcode-bar {
+    display: flex;
+    gap: 10px;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .postcode-input {
+    flex: 1;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    font-size: 15px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    color: var(--text-dark);
+    background: white;
+    outline: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: border-color 0.2s;
+  }
+
+  .postcode-input:focus { border-color: var(--sky-deep); }
+
+  .postcode-btn {
+    background: var(--sky-deep);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .postcode-btn:hover { background: #5d9abf; }
+
+  /* PRIVACY NOTE */
+  .privacy-note {
+    max-width: 500px;
+    margin: 16px auto 0;
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.7;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* RESULTS AREA */
+  .results-area {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 24px 100px;
+  }
+
+  .results-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 16px;
+  }
+
+  /* DIRECTOR CARD */
+  .director-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+
+  .director-card:hover {
+    box-shadow: 0 6px 24px rgba(122,174,207,0.15);
+    transform: translateY(-1px);
+  }
+
+  .director-card.selected {
+    border-color: var(--sky-deep);
+    background: #f5faff;
+  }
+
+  /* CHECKBOX */
+  .card-checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: white;
+  }
+
+  .director-card.selected .card-checkbox {
+    background: var(--sky-deep);
+    border-color: var(--sky-deep);
+  }
+
+  .card-checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .director-card.selected .card-checkbox::after { opacity: 1; }
+
+  /* CARD CONTENT */
+  .card-content { flex: 1; }
+
+  .card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+
+  .card-address {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 300;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+
+  .card-distance {
+    display: inline-block;
+    font-size: 11px;
+    background: var(--sky-light);
+    color: var(--sky-deep);
+    padding: 3px 10px;
+    border-radius: 50px;
+    margin-bottom: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .card-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .card-link {
+    font-size: 12px;
+    color: var(--sky-deep);
+    text-decoration: none;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+  }
+
+  .card-link:hover { color: #4a8ab0; text-decoration: underline; }
+
+  .stars {
+    color: #f0b429;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .rating-text {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-left: 2px;
+  }
+
+  /* NAFD BADGE */
+  .nafd-badge {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: #f0ecf8;
+    color: #7a6a9a;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-weight: 500;
+  }
+
+  /* STICKY SEND BAR */
+  .send-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 200;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  }
+
+  .send-bar-left {
+    font-size: 13px;
+    color: var(--text-mid);
+    font-weight: 300;
+  }
+
+  .send-bar-left strong {
+    color: var(--sky-deep);
+    font-weight: 500;
+  }
+
+  .btn-send {
+    background: var(--sky-deep);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(122,174,207,0.35);
+  }
+
+  .btn-send:hover {
+    background: #5d9abf;
+    transform: translateY(-1px);
+  }
+
+  .btn-send:disabled {
+    background: var(--border);
+    color: var(--text-light);
+    box-shadow: none;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  /* CONFIRMATION OVERLAY */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(238,244,250,0.96);
+    z-index: 300;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+  }
+
+  .overlay.visible { display: flex; }
+
+  .overlay-icon { font-size: 56px; margin-bottom: 24px; }
+
+  .overlay h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 300;
+    color: var(--text-dark);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .overlay p {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.9;
+    max-width: 420px;
+    margin-bottom: 12px;
+  }
+
+  .overlay-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-light);
+    margin-top: 8px;
+  }
+
+  @media (max-width: 480px) {
+    .results-area { padding: 24px 16px 100px; }
+    .send-bar { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo" style="text-decoration:none;">Funeral<span>Friend</span></a>
+  <div class="nav-right">Your plan is saved</div>
+</nav>
+
+<div class="page-hero">
+  <h1>Your plan is ready.<br>Choose who to send it to.</h1>
+  <p>Enter the postcode where the funeral will take place. We'll show you local funeral directors. Select the ones you'd like to receive your plan — there's no obligation.</p>
+
+  <div class="postcode-bar">
+    <input type="text" class="postcode-input" placeholder="e.g. SE1 4AA" id="postcode" maxlength="8">
+    <button class="postcode-btn" onclick="showResults()">Search</button>
+  </div>
+
+  <p class="privacy-note">🔒 Your contact details remain private. A director must request them separately before they can reach you.</p>
+</div>
+
+<!-- RESULTS -->
+<div class="results-area" id="results" style="display:none;">
+
+  <p class="results-label" id="results-label">5 funeral directors near SE1</p>
+
+  <!-- CARD 1 -->
+  <div class="director-card" onclick="toggleCard(this)">
+    <div class="card-checkbox"></div>
+    <div class="card-content">
+      <div class="card-name">Hodgson & Sons Funeral Directors</div>
+      <div class="card-address">14 Bermondsey Street, London SE1 3UD</div>
+      <span class="card-distance">0.4 miles away</span>
+      <div class="card-links">
+        <span class="stars">★★★★★</span>
+        <span class="rating-text">4.9 (62 reviews)</span>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">See Google reviews ↗</a>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">Visit website ↗</a>
+        <span class="nafd-badge">NAFD Member</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 -->
+  <div class="director-card" onclick="toggleCard(this)">
+    <div class="card-checkbox"></div>
+    <div class="card-content">
+      <div class="card-name">Southwark Funeral Service</div>
+      <div class="card-address">88 Borough High Street, London SE1 1LL</div>
+      <span class="card-distance">0.7 miles away</span>
+      <div class="card-links">
+        <span class="stars">★★★★★</span>
+        <span class="rating-text">4.8 (41 reviews)</span>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">See Google reviews ↗</a>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">Visit website ↗</a>
+        <span class="nafd-badge">NAFD Member</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 -->
+  <div class="director-card" onclick="toggleCard(this)">
+    <div class="card-checkbox"></div>
+    <div class="card-content">
+      <div class="card-name">Grace & Peace Funerals</div>
+      <div class="card-address">32 Old Kent Road, London SE1 5QR</div>
+      <span class="card-distance">1.1 miles away</span>
+      <div class="card-links">
+        <span class="stars">★★★★☆</span>
+        <span class="rating-text">4.6 (28 reviews)</span>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">See Google reviews ↗</a>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">Visit website ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 -->
+  <div class="director-card" onclick="toggleCard(this)">
+    <div class="card-checkbox"></div>
+    <div class="card-content">
+      <div class="card-name">Co-op Funeralcare</div>
+      <div class="card-address">210 Walworth Road, London SE17 1JL</div>
+      <span class="card-distance">1.4 miles away</span>
+      <div class="card-links">
+        <span class="stars">★★★★☆</span>
+        <span class="rating-text">4.5 (114 reviews)</span>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">See Google reviews ↗</a>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">Visit website ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5 -->
+  <div class="director-card" onclick="toggleCard(this)">
+    <div class="card-checkbox"></div>
+    <div class="card-content">
+      <div class="card-name">Thomas & Braithwaite</div>
+      <div class="card-address">5 Camberwell New Road, London SE5 0TF</div>
+      <span class="card-distance">1.8 miles away</span>
+      <div class="card-links">
+        <span class="stars">★★★★★</span>
+        <span class="rating-text">5.0 (19 reviews)</span>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">See Google reviews ↗</a>
+        <a href="#" class="card-link" onclick="event.stopPropagation()">Visit website ↗</a>
+        <span class="nafd-badge">NAFD Member</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- STICKY SEND BAR -->
+<div class="send-bar" id="send-bar" style="display:none;">
+  <div class="send-bar-left">
+    <strong id="selected-count">0 selected</strong><br>
+    Your details stay private until they contact you
+  </div>
+  <button class="btn-send" id="send-btn" disabled onclick="sendPlan()">Send plan</button>
+</div>
+
+<!-- CONFIRMATION OVERLAY -->
+<div class="overlay" id="confirm-overlay">
+  <div class="overlay-icon">🕊️</div>
+  <h2>Your plan has been sent</h2>
+  <p>The funeral directors you selected have received the plan. Your contact details remain private — they will reach out when they are ready to discuss the arrangements with you.</p>
+  <p>We will email you as soon as a director has been in touch.</p>
+  <p class="overlay-note">You have done something kind and loving today.<br>Take care of yourself.</p>
+</div>
+
+<script>
+  let selectedCount = 0;
+
+  function showResults() {
+    const postcode = document.getElementById('postcode').value.trim();
+    if (!postcode) return;
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('send-bar').style.display = 'flex';
+    document.getElementById('results-label').textContent = '5 funeral directors near ' + postcode.toUpperCase();
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }
+
+  function toggleCard(card) {
+    card.classList.toggle('selected');
+    selectedCount = document.querySelectorAll('.director-card.selected').length;
+    document.getElementById('selected-count').textContent = selectedCount + ' selected';
+    const btn = document.getElementById('send-btn');
+    btn.disabled = selectedCount === 0;
+  }
+
+  function sendPlan() {
+    if (selectedCount === 0) return;
+    document.getElementById('confirm-overlay').classList.add('visible');
+  }
+</script>
+</body>
+</html>
