@@ -438,23 +438,23 @@
 
     <div class="field-group">
       <div class="field-label">Their full name</div>
-      <input type="text" class="field-input" placeholder="e.g. Margaret Rose Townsend">
+      <input type="text" class="field-input" id="full_name" placeholder="e.g. Margaret Rose Townsend">
 
       <hr class="field-divider">
 
       <div class="field-label">Known as</div>
       <div class="field-hint">Did they have a nickname or a name they preferred? This is how we'll refer to them throughout the plan.</div>
-      <input type="text" class="field-input" placeholder="e.g. Peggy">
+      <input type="text" class="field-input" id="known_as" placeholder="e.g. Peggy">
 
       <hr class="field-divider">
 
       <div class="field-label">Date of birth</div>
-      <input type="date" class="field-input">
+      <input type="date" class="field-input" id="date_of_birth">
 
       <hr class="field-divider">
 
       <div class="field-label">Date of passing</div>
-      <input type="date" class="field-input">
+      <input type="date" class="field-input" id="date_of_passing">
     </div>
 
     <div class="field-group">
@@ -526,7 +526,7 @@
           <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure yet</button>
         </div>
         <div class="not-sure-note">That's fine — this can be decided after the funeral when you feel ready.</div>
-        <input type="text" class="field-input" placeholder="Any specific location or wishes for the ashes..." style="margin-top:12px;">
+        <input type="text" class="field-input" id="ashes_wishes" placeholder="Any specific location or wishes for the ashes..." style="margin-top:12px;">
       </div>
 
       <!-- CONDITIONAL: Burial plot — only shows if burial selected -->
@@ -539,7 +539,7 @@
           <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure yet</button>
         </div>
         <div class="not-sure-note">The funeral director will guide you through available local options.</div>
-        <input type="text" class="field-input" placeholder="Cemetery name or location if known..." style="margin-top:12px;">
+        <input type="text" class="field-input" id="burial_location" placeholder="Cemetery name or location if known..." style="margin-top:12px;">
       </div>
     </div>
 
@@ -570,7 +570,7 @@
     <div class="field-group">
       <div class="field-label">Faith or religion</div>
       <div class="field-hint">If your loved one followed a particular faith, let us know here. This helps the funeral director arrange the right type of service and any specific customs.</div>
-      <input type="text" class="field-input" placeholder="e.g. Christian, Catholic, Muslim, Jewish, or leave blank">
+      <input type="text" class="field-input" id="faith" placeholder="e.g. Christian, Catholic, Muslim, Jewish, or leave blank">
     </div>
 
     <div class="form-nav">
@@ -600,7 +600,7 @@
     <div class="field-group">
       <div class="field-label">Readings</div>
       <div class="field-hint">A reading is a short piece spoken during the service — a poem, a scripture, a favourite quote, or a personal piece of writing. You can write it here or simply describe what you'd like.</div>
-      <textarea class="field-input" placeholder="e.g. 'Do Not Stand at My Grave and Weep' by Mary Elizabeth Frye — or write your own words here"></textarea>
+      <textarea class="field-input" id="readings" placeholder="e.g. 'Do Not Stand at My Grave and Weep' by Mary Elizabeth Frye — or write your own words here"></textarea>
     </div>
 
     <div class="field-group">
@@ -613,7 +613,7 @@
         <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure yet</button>
       </div>
       <div class="not-sure-note">That's fine — you can decide this closer to the time with the funeral director.</div>
-      <textarea class="field-input" placeholder="Any notes about their life, character, or memories you'd like included..." style="margin-top:12px;"></textarea>
+      <textarea class="field-input" id="eulogy_notes" placeholder="Any notes about their life, character, or memories you'd like included..." style="margin-top:12px;"></textarea>
     </div>
 
     <div class="field-group">
@@ -641,7 +641,7 @@
     <div class="field-group">
       <div class="field-label">Dress code</div>
       <div class="field-hint">Traditional black is common but not required. Some families request a colour that meant something to their loved one, or ask guests to wear something that reflects their personality.</div>
-      <input type="text" class="field-input" placeholder="e.g. Traditional black, or her favourite colour was yellow...">
+      <input type="text" class="field-input" id="dress_code" placeholder="e.g. Traditional black, or her favourite colour was yellow...">
     </div>
 
     <div class="form-nav">
@@ -683,7 +683,7 @@
         <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
       </div>
       <div class="not-sure-note">No problem at all. The funeral director will guide you through every option with no pressure.</div>
-      <textarea class="field-input" placeholder="In your own words — describe what feels right, or share anything your loved one said they'd like..." style="margin-top:12px;"></textarea>
+      <textarea class="field-input" id="coffin_notes" placeholder="In your own words — describe what feels right, or share anything your loved one said they'd like..." style="margin-top:12px;"></textarea>
     </div>
 
     <div class="field-group">
@@ -791,12 +791,12 @@
         <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
       </div>
       <div class="not-sure-note">You can decide this closer to the time — there is no rush.</div>
-      <input type="text" class="field-input" placeholder="Describe the item if you'd like..." style="margin-top:12px;">
+      <input type="text" class="field-input" id="personal_items_notes" placeholder="Describe the item if you'd like..." style="margin-top:12px;">
     </div>
 
     <div class="field-group">
       <div class="field-hint">Is there anything else important to you or your loved one that you'd like included in the plan? A special request, a tradition, a final wish.</div>
-      <textarea class="field-input" placeholder="Anything at all — no detail is too small..."></textarea>
+      <textarea class="field-input" id="anything_else" placeholder="Anything at all — no detail is too small..."></textarea>
     </div>
 
     <div class="form-nav">
@@ -814,30 +814,30 @@
 
     <div class="field-group">
       <div class="field-label">Your first name</div>
-      <input type="text" class="field-input" placeholder="e.g. Robert">
+      <input type="text" class="field-input" id="contact_firstname" placeholder="e.g. Robert">
 
       <hr class="field-divider">
 
       <div class="field-label">Your last name</div>
-      <input type="text" class="field-input" placeholder="e.g. Townsend">
+      <input type="text" class="field-input" id="contact_lastname" placeholder="e.g. Townsend">
 
       <hr class="field-divider">
 
       <div class="field-label">Your email address</div>
       <div class="field-hint">This is where we'll send updates about your plan.</div>
-      <input type="email" class="field-input" placeholder="e.g. your@email.com">
+      <input type="email" class="field-input" id="contact_email" placeholder="e.g. your@email.com">
 
       <hr class="field-divider">
 
       <div class="field-label">Your phone number</div>
       <div class="field-hint">So the funeral director can reach you directly when they're ready to discuss the plan.</div>
-      <input type="tel" class="field-input" placeholder="e.g. 07700 900000">
+      <input type="tel" class="field-input" id="contact_phone" placeholder="e.g. 07700 900000">
 
       <hr class="field-divider">
 
       <div class="field-label">Your relationship to the deceased</div>
       <div class="field-hint">This helps the funeral director understand who they are speaking with.</div>
-      <input type="text" class="field-input" placeholder="e.g. Daughter, Son, Partner, Friend...">
+      <input type="text" class="field-input" id="contact_relationship" placeholder="e.g. Daughter, Son, Partner, Friend...">
     </div>
 
     <div class="field-group" style="background: linear-gradient(135deg, #eef4fa, #f0ecf8); border: none;">
