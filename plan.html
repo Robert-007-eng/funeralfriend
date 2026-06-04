@@ -393,7 +393,10 @@
 
 <nav>
   <a href="index.html" class="logo" style="text-decoration:none;">Funeral<span>Friend</span></a>
-  <button class="save-btn">Save progress</button>
+  <div style="display:flex; gap:16px; align-items:center;">
+    <button class="save-btn" onclick="savePlan()">Save progress</button>
+    <button onclick="logOut()" style="background:none; border:none; font-size:12px; color:#8a8a8a; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:'Jost',sans-serif;">Log out</button>
+  </div>
 </nav>
 
 <div class="form-hero">
@@ -924,6 +927,39 @@
       if (note) note.classList.add('visible');
     }
   }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://jjtjncedkqoxvoyalchc.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGpuY2Vka3FveHZveWFsY2hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1Njc3NDUsImV4cCI6MjA5NjE0Mzc0NX0.sdbKhWWvttWBFPcB-xNL0I-dCHGw-qdCe7aumPVtHNU';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  async function checkSession() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      window.location.href = 'login.html';
+    }
+  }
+
+  async function logOut() {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'index.html';
+  }
+
+  async function savePlan() {
+    const btn = document.querySelector('.save-btn');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = 'Saved ✓';
+      setTimeout(() => {
+        btn.textContent = 'Save progress';
+        btn.disabled = false;
+      }, 2000);
+    }, 800);
+  }
+
+  checkSession();
 </script>
 </body>
 </html>
