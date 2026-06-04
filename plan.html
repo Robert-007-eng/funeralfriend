@@ -413,12 +413,17 @@
 
 <!-- TABS -->
 <div class="tabs-wrapper">
-  <div class="tabs">
-    <button class="tab active" onclick="showPanel(0)">Your Loved One</button>
-    <button class="tab" onclick="showPanel(1)">The Service</button>
-    <button class="tab" onclick="showPanel(2)">The Ceremony</button>
-    <button class="tab" onclick="showPanel(3)">Personal Touches</button>
-    <button class="tab" onclick="showPanel(4)">Your Details</button>
+  <div class="tabs" style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; gap:4px;">
+      <button class="tab active" onclick="showPanel(0)">Your Loved One</button>
+      <button class="tab" onclick="showPanel(1)">The Service</button>
+      <button class="tab" onclick="showPanel(2)">The Ceremony</button>
+      <button class="tab" onclick="showPanel(3)">Personal Touches</button>
+      <button class="tab" onclick="showPanel(4)">Your Details</button>
+    </div>
+    <div id="save-reminder" style="font-size:11px; color:#7aaecf; font-family:'Jost',sans-serif; font-weight:400; letter-spacing:0.04em; padding:0 16px; white-space:nowrap; opacity:0; transition:opacity 1s;">
+      💾 Remember to save your progress
+    </div>
   </div>
 </div>
 
@@ -1069,6 +1074,15 @@
       loadPlan();
     }
   });
+
+  // Show save reminder every 3 minutes
+  setInterval(() => {
+    const reminder = document.getElementById('save-reminder');
+    if (reminder) {
+      reminder.style.opacity = '1';
+      setTimeout(() => { reminder.style.opacity = '0'; }, 5000);
+    }
+  }, 180000);
 </script>
 </body>
 </html>
