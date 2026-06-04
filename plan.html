@@ -1010,25 +1010,12 @@
 
     const planData = collectPlanData();
 
-    const { data: existing, error: fetchError } = await supabaseClient
+    const { error } = await supabaseClient
       .from('plans')
-      .select('id')
-      .eq('user_id', session.user.id)
-      .maybeSingle();
-
-    let error;
-    if (existing) {
-      const result = await supabaseClient
-        .from('plans')
-        .update({ plan_data: planData, updated_at: new Date().toISOString() })
-        .eq('user_id', session.user.id);
-      error = result.error;
-    } else {
-      const result = await supabaseClient
-        .from('plans')
-        .insert({ user_id: session.user.id, plan_data: planData });
-      error = result.error;
-    }
+      .upsert(
+        { user_id: session.user.id, plan_data: planData, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id' }
+      );
 
     if (error) {
       btn.textContent = 'Save failed — try again';
