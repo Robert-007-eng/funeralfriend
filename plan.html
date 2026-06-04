@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuneralFriend — Your Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #faf8f4;
+    --sky-light: #deeaf5;
+    --sky-mid: #b8d4ea;
+    --sky-deep: #7aaecf;
+    --text-dark: #2c2c2c;
+    --text-mid: #5a5a5a;
+    --text-light: #8a8a8a;
+    --border: #e8e2d9;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text-dark);
+  }
+
+  .logo span { color: var(--sky-deep); }
+
+  .save-btn {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--sky-deep);
+    background: var(--sky-light);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    transition: background 0.2s;
+  }
+
+  .save-btn:hover { background: var(--sky-mid); }
+
+  /* HERO BAR */
+  .form-hero {
+    background: linear-gradient(180deg, #c9dff2 0%, #eef4fa 100%);
+    padding: 32px 24px 0;
+    text-align: center;
+  }
+
+  .form-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 300;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+  }
+
+  .form-hero p {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto 24px;
+  }
+
+  /* TABS */
+  .tabs-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    background: linear-gradient(180deg, #eef4fa 0%, #f5f0ea 100%);
+  }
+
+  .tabs-wrapper::-webkit-scrollbar { display: none; }
+
+  .tabs {
+    display: flex;
+    min-width: max-content;
+    padding: 0 24px;
+    gap: 4px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .tab {
+    padding: 14px 20px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: var(--text-light);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'Jost', sans-serif;
+  }
+
+  .tab:hover { color: var(--sky-deep); }
+
+  .tab.active {
+    color: var(--sky-deep);
+    border-bottom-color: var(--sky-deep);
+    font-weight: 500;
+  }
+
+  .tab.complete {
+    color: #7cb87c;
+  }
+
+  .tab.complete::after {
+    content: ' ✓';
+    font-size: 10px;
+  }
+
+  /* FORM BODY */
+  .form-body {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .section-intro {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 28px;
+    border-left: 3px solid var(--sky-mid);
+  }
+
+  .section-intro h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+  }
+
+  .section-intro p {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-mid);
+    line-height: 1.8;
+  }
+
+  /* FIELD GROUPS */
+  .field-group {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  }
+
+  .field-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .field-hint {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+
+  .field-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--text-dark);
+    background: var(--cream);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .field-input:focus {
+    border-color: var(--sky-deep);
+    background: white;
+  }
+
+  textarea.field-input {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  /* PHOTO UPLOAD */
+  .photo-upload {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .photo-upload:hover {
+    border-color: var(--sky-mid);
+    background: var(--sky-light);
+  }
+
+  .photo-upload p {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 300;
+    margin-top: 8px;
+  }
+
+  .photo-icon { font-size: 32px; }
+
+  /* YES / NO / NOT SURE */
+  .options-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .option-btn {
+    padding: 10px 22px;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    color: var(--text-mid);
+    background: var(--cream);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .option-btn:hover {
+    border-color: var(--sky-mid);
+    background: var(--sky-light);
+  }
+
+  .option-btn.selected-yes {
+    background: #e8f5e8;
+    border-color: #7cb87c;
+    color: #3a7a3a;
+  }
+
+  .option-btn.selected-no {
+    background: #fef0f0;
+    border-color: #e0a0a0;
+    color: #8a4040;
+  }
+
+  .option-btn.selected-unsure {
+    background: var(--sky-light);
+    border-color: var(--sky-mid);
+    color: var(--sky-deep);
+  }
+
+  /* NOT SURE EXPLANATION */
+  .not-sure-note {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: var(--sky-light);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .not-sure-note.visible { display: block; }
+
+  /* DIVIDER */
+  .field-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  /* NAVIGATION BUTTONS */
+  .form-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    gap: 12px;
+  }
+
+  .btn-next {
+    background: var(--sky-deep);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(122,174,207,0.3);
+  }
+
+  .btn-next:hover {
+    background: #5d9abf;
+    transform: translateY(-1px);
+  }
+
+  .btn-back {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-light);
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-back:hover {
+    border-color: var(--sky-mid);
+    color: var(--sky-deep);
+  }
+
+  /* PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Progress dots */
+  .progress-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px 0 0;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .dot.active { background: var(--sky-deep); }
+  .dot.done { background: #7cb87c; }
+
+  @media (max-width: 480px) {
+    .form-body { padding: 28px 16px 80px; }
+    .field-group { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo" style="text-decoration:none;">Funeral<span>Friend</span></a>
+  <button class="save-btn">Save progress</button>
+</nav>
+
+<div class="form-hero">
+  <h1>Your loved one's plan</h1>
+  <p>Take your time. There is no rush. You can save your progress and return whenever you feel ready. Move between sections in any order you like.</p>
+  <div class="progress-dots">
+    <div class="dot active" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+    <div class="dot" id="d4"></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab active" onclick="showPanel(0)">Your Loved One</button>
+    <button class="tab" onclick="showPanel(1)">The Service</button>
+    <button class="tab" onclick="showPanel(2)">The Ceremony</button>
+    <button class="tab" onclick="showPanel(3)">Personal Touches</button>
+    <button class="tab" onclick="showPanel(4)">Your Details</button>
+  </div>
+</div>
+
+<div class="form-body">
+
+  <!-- PANEL 0: ABOUT YOUR LOVED ONE -->
+  <div class="panel active" id="panel-0">
+    <div class="section-intro">
+      <h2>About your loved one</h2>
+      <p>Begin here. Just a few details about the person you are planning this for. Fill in what you know and leave anything you're unsure about — you can always come back.</p>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Their full name</div>
+      <input type="text" class="field-input" placeholder="e.g. Margaret Rose Townsend">
+
+      <hr class="field-divider">
+
+      <div class="field-label">Known as</div>
+      <div class="field-hint">Did they have a nickname or a name they preferred? This is how we'll refer to them throughout the plan.</div>
+      <input type="text" class="field-input" placeholder="e.g. Peggy">
+
+      <hr class="field-divider">
+
+      <div class="field-label">Date of birth</div>
+      <input type="date" class="field-input">
+
+      <hr class="field-divider">
+
+      <div class="field-label">Date of passing</div>
+      <input type="date" class="field-input">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Photos</div>
+      <div class="field-hint">Entirely optional. You can upload one or several photos — one might be used in the order of service, others displayed at the venue. They will only ever be shared with directors you choose to contact.</div>
+      <div class="photo-upload">
+        <div class="photo-icon">🕊️</div>
+        <p>Tap to upload photos</p>
+        <p>You can add one or several — optional</p>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <div></div>
+      <button class="btn-next" onclick="showPanel(1)">Next — The Service →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 1: THE SERVICE -->
+  <div class="panel" id="panel-1">
+    <div class="section-intro">
+      <h2>The service</h2>
+      <p>These are the main decisions about the type of funeral. Don't worry if you're unsure about anything — select "Not sure" and the funeral director will guide you through it.</p>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Burial or cremation?</div>
+      <div class="field-hint">If you have a preference, select below. If you're not sure, that's completely fine — the funeral director will explain both options clearly.</div>
+
+      <button onclick="toggleMoreInfo2('burial-cremation-info', this, 'burial or cremation')" style="background:none; border:none; color:var(--sky-deep); font-size:12px; font-family:'Jost',sans-serif; cursor:pointer; padding:0; margin-bottom:14px; text-decoration:underline; text-underline-offset:3px;">+ Tell me more about burial and cremation</button>
+
+      <div id="burial-cremation-info" style="display:none; background:var(--sky-light); border-radius:10px; padding:16px; margin-bottom:16px; font-size:13px; color:var(--text-mid); line-height:1.8;">
+        <strong style="display:block; margin-bottom:8px; color:var(--text-dark);">The difference explained:</strong>
+        <strong>Burial</strong> — The body is placed in a coffin and interred in a cemetery, churchyard, or natural burial ground. It provides a permanent place for family and friends to visit and pay their respects. Burial tends to cost slightly more than cremation.<br><br>
+        <strong>Cremation</strong> — The body is respectfully cremated and the ashes are returned to the family. Around 80% of UK funerals choose cremation. Ashes can be kept, scattered somewhere meaningful, or interred. It is generally the more flexible and lower cost option.<br><br>
+        <strong>Direct cremation</strong> — A simple, unattended cremation with no service at the time. Families often hold a separate memorial celebration later when they feel ready. The most affordable option.<br><br>
+        There is no right or wrong choice. Both are a beautiful and dignified way to say goodbye.
+      </div>
+
+      <div class="options-row">
+        <button class="option-btn" onclick="selectBurial(this,'Burial')">Burial</button>
+        <button class="option-btn" onclick="selectBurial(this,'Cremation')">Cremation</button>
+        <button class="option-btn" onclick="selectBurial(this,'Cremation')">Direct cremation</button>
+        <button class="option-btn" onclick="selectBurial(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">That's completely fine. The funeral director will explain both options clearly and help you decide what feels right. There is no pressure.</div>
+
+      <!-- CONDITIONAL: Ashes — only shows if cremation selected -->
+      <div id="ashes-field" style="display:none; margin-top:20px;">
+        <hr class="field-divider">
+        <div class="field-label">What would you like to do with the ashes?</div>
+        <div class="field-hint">There is no rush to decide this now. If you have a preference it helps the director prepare.</div>
+
+        <button onclick="toggleMoreInfo2('ashes-info', this, 'ashes options')" style="background:none; border:none; color:var(--sky-deep); font-size:12px; font-family:'Jost',sans-serif; cursor:pointer; padding:0; margin-bottom:14px; text-decoration:underline; text-underline-offset:3px;">+ Tell me about the options for ashes</button>
+
+        <div id="ashes-info" style="display:none; background:var(--sky-light); border-radius:10px; padding:16px; margin-bottom:16px; font-size:13px; color:var(--text-mid); line-height:1.8;">
+          <strong style="display:block; margin-bottom:8px; color:var(--text-dark);">Options for ashes explained:</strong>
+          <strong>Return to family</strong> — The ashes are placed in an urn and returned to you. Many families keep them at home, display them somewhere meaningful, or decide later what to do with them. There is no time pressure.<br><br>
+          <strong>Scatter somewhere special</strong> — A place that held meaning for your loved one — a favourite beach, a park, a garden, somewhere they loved. Some locations require permission so the funeral director can advise.<br><br>
+          <strong>Interred at a cemetery</strong> — The ashes are placed in a dedicated plot or memorial garden at a cemetery. This provides a permanent place for family to visit, similar to a burial.<br><br>
+          <strong>Garden of remembrance</strong> — Many crematoria have a beautiful garden where ashes can be scattered or interred. A peaceful and simple option.
+        </div>
+
+        <div class="options-row">
+          <button class="option-btn" onclick="select(this,'yes')">Return to family</button>
+          <button class="option-btn" onclick="select(this,'yes')">Scatter somewhere special</button>
+          <button class="option-btn" onclick="select(this,'yes')">Interred at cemetery</button>
+          <button class="option-btn" onclick="select(this,'yes')">Garden of remembrance</button>
+          <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure yet</button>
+        </div>
+        <div class="not-sure-note">That's fine — this can be decided after the funeral when you feel ready.</div>
+        <input type="text" class="field-input" placeholder="Any specific location or wishes for the ashes..." style="margin-top:12px;">
+      </div>
+
+      <!-- CONDITIONAL: Burial plot — only shows if burial selected -->
+      <div id="burial-field" style="display:none; margin-top:20px;">
+        <hr class="field-divider">
+        <div class="field-label">Do you have a burial plot in mind?</div>
+        <div class="field-hint">This could be a family plot, a specific cemetery, a churchyard, or a natural burial ground. If you're not sure, the funeral director can help you find an appropriate local option.</div>
+        <div class="options-row">
+          <button class="option-btn" onclick="select(this,'yes')">Yes, we have one</button>
+          <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure yet</button>
+        </div>
+        <div class="not-sure-note">The funeral director will guide you through available local options.</div>
+        <input type="text" class="field-input" placeholder="Cemetery name or location if known..." style="margin-top:12px;">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Type of service</div>
+      <div class="field-hint">If you have a preference, select below. If you're unsure, the funeral director will walk you through all options.</div>
+
+      <button onclick="toggleMoreInfo2('service-info', this, 'service types')" style="background:none; border:none; color:var(--sky-deep); font-size:12px; font-family:'Jost',sans-serif; cursor:pointer; padding:0; margin-bottom:14px; text-decoration:underline; text-underline-offset:3px;">+ Tell me more about service types</button>
+
+      <div id="service-info" style="display:none; background:var(--sky-light); border-radius:10px; padding:16px; margin-bottom:16px; font-size:13px; color:var(--text-mid); line-height:1.8;">
+        <strong style="display:block; margin-bottom:8px; color:var(--text-dark);">Service types explained:</strong>
+        <strong>Religious</strong> — Led by a minister, priest, imam, rabbi or faith leader. Follows the traditions and prayers of your loved one's faith. Can take place in a church, mosque, synagogue, crematorium or graveside.<br><br>
+        <strong>Humanist / Celebrant</strong> — Non-religious. Led by a trained celebrant who works with the family to create a completely personal ceremony celebrating your loved one's life, personality and values. No prayers or religious content unless requested.<br><br>
+        <strong>Civil</strong> — A middle ground. Led by a celebrant but can blend secular and optional faith elements. Flexible and personal.<br><br>
+        <strong>Simple / No service</strong> — A quiet, dignified farewell without a formal ceremony. Often chosen with direct cremation. Families sometimes hold a separate memorial gathering later.
+      </div>
+
+      <div class="options-row">
+        <button class="option-btn" onclick="select(this,'yes')">Religious</button>
+        <button class="option-btn" onclick="select(this,'yes')">Humanist / Celebrant</button>
+        <button class="option-btn" onclick="select(this,'yes')">Civil</button>
+        <button class="option-btn" onclick="select(this,'yes')">Simple / No service</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">No problem at all. The funeral director will talk you through the options and there is no obligation to decide now.</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Faith or religion</div>
+      <div class="field-hint">If your loved one followed a particular faith, let us know here. This helps the funeral director arrange the right type of service and any specific customs.</div>
+      <input type="text" class="field-input" placeholder="e.g. Christian, Catholic, Muslim, Jewish, or leave blank">
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-back" onclick="showPanel(0)">← Back</button>
+      <button class="btn-next" onclick="showPanel(2)">Next — The Ceremony →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2: THE CEREMONY -->
+  <div class="panel" id="panel-2">
+    <div class="section-intro">
+      <h2>The ceremony</h2>
+      <p>This is where you can make the service truly personal. Think about what made your loved one who they were — their music, their words, their spirit.</p>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Music choices</div>
+      <div class="field-hint">Was there a song they used to sing at the top of their lungs? A piece of music that moved them? Their all-time favourite? Add as many as you like.</div>
+      <div id="music-list">
+        <input type="text" class="field-input" placeholder="Song 1 — artist and title" style="margin-bottom:10px;">
+        <input type="text" class="field-input" placeholder="Song 2 — optional" style="margin-bottom:10px;">
+        <input type="text" class="field-input" placeholder="Song 3 — optional" style="margin-bottom:10px;">
+      </div>
+      <button onclick="addSong()" style="background:none; border:1px dashed var(--border); color:var(--sky-deep); padding:8px 20px; border-radius:50px; font-size:12px; font-family:'Jost',sans-serif; cursor:pointer; margin-top:4px;">+ Add another song</button>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Readings</div>
+      <div class="field-hint">A reading is a short piece spoken during the service — a poem, a scripture, a favourite quote, or a personal piece of writing. You can write it here or simply describe what you'd like.</div>
+      <textarea class="field-input" placeholder="e.g. 'Do Not Stand at My Grave and Weep' by Mary Elizabeth Frye — or write your own words here"></textarea>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">The eulogy</div>
+      <div class="field-hint">The eulogy is a speech celebrating your loved one's life. It can be given by a family member, a close friend, or the celebrant. You can share notes here to help whoever delivers it.</div>
+      <div class="options-row" style="margin-bottom:12px;">
+        <button class="option-btn" onclick="select(this,'yes')">Family member</button>
+        <button class="option-btn" onclick="select(this,'yes')">Close friend</button>
+        <button class="option-btn" onclick="select(this,'yes')">The celebrant</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure yet</button>
+      </div>
+      <div class="not-sure-note">That's fine — you can decide this closer to the time with the funeral director.</div>
+      <textarea class="field-input" placeholder="Any notes about their life, character, or memories you'd like included..." style="margin-top:12px;"></textarea>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Pallbearers</div>
+      <div class="field-hint">Pallbearers carry the coffin at the funeral. Select a preference below or choose not sure.</div>
+
+      <button onclick="toggleMoreInfo2('pallbearer-info', this, 'pallbearers')" style="background:none; border:none; color:var(--sky-deep); font-size:12px; font-family:'Jost',sans-serif; cursor:pointer; padding:0; margin-bottom:14px; text-decoration:underline; text-underline-offset:3px;">+ Tell me more about pallbearers</button>
+
+      <div id="pallbearer-info" style="display:none; background:var(--sky-light); border-radius:10px; padding:16px; margin-bottom:16px; font-size:13px; color:var(--text-mid); line-height:1.8;">
+        <strong style="display:block; margin-bottom:8px; color:var(--text-dark);">What are pallbearers?</strong>
+        Pallbearers carry the coffin from the hearse into the venue and to its final resting place. Typically four to six people are needed.<br><br>
+        <strong>Family or friends</strong> — Choosing loved ones as pallbearers can be a deeply meaningful tribute. The funeral director will brief them on what to do so there is nothing to worry about.<br><br>
+        <strong>Funeral home staff</strong> — Trained professionals who carry the coffin with care and dignity. Many families choose this option, especially if family members find it too difficult emotionally.<br><br>
+        There is no right choice — both are equally respectful.
+      </div>
+
+      <div class="options-row">
+        <button class="option-btn" onclick="select(this,'yes')">Family or friends</button>
+        <button class="option-btn" onclick="select(this,'yes')">Funeral home staff</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">The funeral director will discuss this with you. There is no rush to decide.</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Dress code</div>
+      <div class="field-hint">Traditional black is common but not required. Some families request a colour that meant something to their loved one, or ask guests to wear something that reflects their personality.</div>
+      <input type="text" class="field-input" placeholder="e.g. Traditional black, or her favourite colour was yellow...">
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-back" onclick="showPanel(1)">← Back</button>
+      <button class="btn-next" onclick="showPanel(3)">Next — Personal Touches →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 3: PERSONAL TOUCHES -->
+  <div class="panel" id="panel-3">
+    <div class="section-intro">
+      <h2>Personal touches</h2>
+      <p>These are the details that make a funeral truly feel like a celebration of a life. Add as much or as little as you like.</p>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">The coffin</div>
+      <div class="field-hint">If you have a preference, select below. If you're not sure, that's completely fine — the funeral director will show you all available options with pricing.</div>
+
+      <button onclick="toggleMoreInfo('coffin-info')" style="background:none; border:none; color:var(--sky-deep); font-size:12px; font-family:'Jost',sans-serif; cursor:pointer; padding:0; margin-bottom:14px; text-decoration:underline; text-underline-offset:3px;">+ Tell me more about coffin options</button>
+
+      <div id="coffin-info" style="display:none; background:var(--sky-light); border-radius:10px; padding:16px; margin-bottom:16px; font-size:13px; color:var(--text-mid); line-height:1.8;">
+        <strong style="display:block; margin-bottom:8px; color:var(--text-dark);">Coffin options explained:</strong>
+        <strong>Traditional hardwood</strong> — Oak, mahogany or pine. Classic and dignified. The most common choice in the UK.<br><br>
+        <strong>Wicker / willow</strong> — Woven natural material. Warm, organic feel. Fully biodegradable and eco-friendly.<br><br>
+        <strong>Bamboo</strong> — Sustainable and lightweight. A modern, natural option.<br><br>
+        <strong>Seagrass</strong> — Soft woven texture. Natural and gentle in appearance.<br><br>
+        <strong>Cardboard</strong> — Simple, dignified and the most eco-friendly option. Often chosen for direct cremations.<br><br>
+        <strong>Personalised</strong> — Can feature colours, images, patterns, or meaningful designs. Many families choose this to reflect their loved one's personality or passions.
+      </div>
+
+      <div class="options-row">
+        <button class="option-btn" onclick="select(this,'yes')">Traditional hardwood</button>
+        <button class="option-btn" onclick="select(this,'yes')">Wicker / willow</button>
+        <button class="option-btn" onclick="select(this,'yes')">Bamboo</button>
+        <button class="option-btn" onclick="select(this,'yes')">Seagrass</button>
+        <button class="option-btn" onclick="select(this,'yes')">Cardboard</button>
+        <button class="option-btn" onclick="select(this,'yes')">Personalised</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">No problem at all. The funeral director will guide you through every option with no pressure.</div>
+      <textarea class="field-input" placeholder="In your own words — describe what feels right, or share anything your loved one said they'd like..." style="margin-top:12px;"></textarea>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Flowers</div>
+      <div class="field-hint">Would you like flowers at the funeral? If yes, a florist will be in touch separately to help you choose something that reflects your loved one.</div>
+      <div class="options-row">
+        <button class="option-btn" onclick="select(this,'yes')">Yes please</button>
+        <button class="option-btn" onclick="select(this,'no')">No flowers</button>
+        <button class="option-btn" onclick="select(this,'yes')">Donations instead</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">No problem — you can decide this later.</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Viewing</div>
+      <div class="field-hint">Would you like the opportunity to visit your loved one at the funeral home before the service?</div>
+
+      <button onclick="toggleMoreInfo2('viewing-info', this, 'viewing')" style="background:none; border:none; color:var(--sky-deep); font-size:12px; font-family:'Jost',sans-serif; cursor:pointer; padding:0; margin-bottom:14px; text-decoration:underline; text-underline-offset:3px;">+ Tell me more about viewing</button>
+
+      <div id="viewing-info" style="display:none; background:var(--sky-light); border-radius:10px; padding:16px; margin-bottom:16px; font-size:13px; color:var(--text-mid); line-height:1.8;">
+        <strong style="display:block; margin-bottom:8px; color:var(--text-dark);">What is a viewing?</strong>
+        A viewing is when family members visit the funeral home to spend quiet time with their loved one before the funeral. It takes place in a peaceful, private chapel of rest.<br><br>
+        Many families find it brings comfort and a sense of closure — a chance to say a private goodbye in their own time and without the pressures of the funeral day itself.<br><br>
+        It is entirely optional and completely your choice. There is no obligation either way, and you do not need to decide now.
+      </div>
+
+      <div class="options-row">
+        <button class="option-btn" onclick="select(this,'yes')">Yes please</button>
+        <button class="option-btn" onclick="select(this,'no')">No thank you</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">You can decide this closer to the time — the funeral director will ask you again when arrangements are confirmed.</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Transport</div>
+      <div class="field-hint">How would you like the funeral procession to travel to the service?</div>
+
+      <button onclick="toggleMoreInfo2('transport-info', this, 'transport options')" style="background:none; border:none; color:var(--sky-deep); font-size:12px; font-family:'Jost',sans-serif; cursor:pointer; padding:0; margin-bottom:14px; text-decoration:underline; text-underline-offset:3px;">+ Tell me more about transport options</button>
+
+      <div id="transport-info" style="display:none; background:var(--sky-light); border-radius:10px; padding:16px; margin-bottom:16px; font-size:13px; color:var(--text-mid); line-height:1.8;">
+        <strong style="display:block; margin-bottom:8px; color:var(--text-dark);">Transport options explained:</strong>
+        <strong>Hearse and family limousines</strong> — The traditional choice. A hearse carries the coffin and one or two limousines follow for close family. Dignified, organised and stress-free on the day.<br><br>
+        <strong>Hearse only</strong> — The coffin travels by hearse and family members make their own way to the venue. A common and perfectly respectful choice.<br><br>
+        <strong>Alternative vehicles</strong> — Some families choose a horse-drawn carriage, a classic car, a motorbike hearse, or another vehicle that reflects their loved one's personality. The funeral director can arrange this.<br><br>
+        <strong>Family making own way</strong> — No hearse arranged through the director. Typically chosen for very simple or direct cremation arrangements.
+      </div>
+
+      <div class="options-row">
+        <button class="option-btn" onclick="select(this,'yes')">Hearse and family cars</button>
+        <button class="option-btn" onclick="select(this,'yes')">Hearse only</button>
+        <button class="option-btn" onclick="select(this,'yes')">Alternative vehicle</button>
+        <button class="option-btn" onclick="select(this,'yes')">Family making own way</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">The funeral director will talk you through the options and costs.</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Order of service</div>
+      <div class="field-hint">Would you like a printed order of service for guests at the funeral?</div>
+
+      <button onclick="toggleMoreInfo2('order-info', this, 'order of service')" style="background:none; border:none; color:var(--sky-deep); font-size:12px; font-family:'Jost',sans-serif; cursor:pointer; padding:0; margin-bottom:14px; text-decoration:underline; text-underline-offset:3px;">+ Tell me more about the order of service</button>
+
+      <div id="order-info" style="display:none; background:var(--sky-light); border-radius:10px; padding:16px; margin-bottom:16px; font-size:13px; color:var(--text-mid); line-height:1.8;">
+        <strong style="display:block; margin-bottom:8px; color:var(--text-dark);">What is an order of service?</strong>
+        An order of service is a small printed booklet handed to guests as they arrive at the funeral. It typically includes:<br><br>
+        — A cover photo of your loved one<br>
+        — Their name and dates<br>
+        — The running order of the service<br>
+        — Words to any hymns or songs<br>
+        — The names of readers and speakers<br>
+        — Any poems or readings<br><br>
+        It also serves as a keepsake for those who attend — something to take home and treasure.<br><br>
+        The funeral director can arrange professional printing, or the family can create and print their own.
+      </div>
+
+      <div class="options-row">
+        <button class="option-btn" onclick="select(this,'yes')">Director to arrange</button>
+        <button class="option-btn" onclick="select(this,'yes')">Family will do it</button>
+        <button class="option-btn" onclick="select(this,'no')">Not needed</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">No problem — this can be decided once other arrangements are in place.</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Death notice</div>
+      <div class="field-hint">A death notice lets the wider community know about the passing and the funeral details. It can be placed in a local newspaper or shared online. The funeral director can arrange this for you.</div>
+      <div class="options-row">
+        <button class="option-btn" onclick="select(this,'yes')">Yes please</button>
+        <button class="option-btn" onclick="select(this,'no')">No thank you</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">The funeral director can advise on the best options for your area.</div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Personal items in the coffin</div>
+      <div class="field-hint">Many families choose to place a small, meaningful item with their loved one — a letter, a photograph, a flower, or something that held special significance. Let the funeral director know if you'd like to do this.</div>
+      <div class="options-row">
+        <button class="option-btn" onclick="select(this,'yes')">Yes</button>
+        <button class="option-btn" onclick="select(this,'no')">No</button>
+        <button class="option-btn" onclick="select(this,'unsure'); toggleNote(this)">Not sure</button>
+      </div>
+      <div class="not-sure-note">You can decide this closer to the time — there is no rush.</div>
+      <input type="text" class="field-input" placeholder="Describe the item if you'd like..." style="margin-top:12px;">
+    </div>
+
+    <div class="field-group">
+      <div class="field-hint">Is there anything else important to you or your loved one that you'd like included in the plan? A special request, a tradition, a final wish.</div>
+      <textarea class="field-input" placeholder="Anything at all — no detail is too small..."></textarea>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-back" onclick="showPanel(2)">← Back</button>
+      <button class="btn-next" onclick="showPanel(4)">Next — Your Details →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 4: YOUR DETAILS -->
+  <div class="panel" id="panel-4">
+    <div class="section-intro">
+      <h2>Your contact details</h2>
+      <p>These details are kept completely private. They are only shared with a funeral director once they have chosen to contact you. We will never pass your details to anyone without your knowledge.</p>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Your first name</div>
+      <input type="text" class="field-input" placeholder="e.g. Robert">
+
+      <hr class="field-divider">
+
+      <div class="field-label">Your last name</div>
+      <input type="text" class="field-input" placeholder="e.g. Townsend">
+
+      <hr class="field-divider">
+
+      <div class="field-label">Your email address</div>
+      <div class="field-hint">This is where we'll send updates about your plan.</div>
+      <input type="email" class="field-input" placeholder="e.g. your@email.com">
+
+      <hr class="field-divider">
+
+      <div class="field-label">Your phone number</div>
+      <div class="field-hint">So the funeral director can reach you directly when they're ready to discuss the plan.</div>
+      <input type="tel" class="field-input" placeholder="e.g. 07700 900000">
+
+      <hr class="field-divider">
+
+      <div class="field-label">Your relationship to the deceased</div>
+      <div class="field-hint">This helps the funeral director understand who they are speaking with.</div>
+      <input type="text" class="field-input" placeholder="e.g. Daughter, Son, Partner, Friend...">
+    </div>
+
+    <div class="field-group" style="background: linear-gradient(135deg, #eef4fa, #f0ecf8); border: none;">
+      <p style="font-size:13px; color: var(--text-mid); line-height:1.8; font-weight:300;">
+        🔒 <strong style="font-weight:500;">Your privacy is protected.</strong> We will never sell, share or use your details for marketing. The only emails you will receive from us are updates about your plan. You can delete your account at any time and all your data will be removed.
+      </p>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-back" onclick="showPanel(3)">← Back</button>
+      <button class="btn-next" onclick="window.location.href='send.html'">Send my plan →</button>
+    </div>
+  </div>
+
+</div><!-- end form-body -->
+
+<script>
+  function toggleMoreInfo(id) {
+    const el = document.getElementById(id);
+    const btn = el.previousElementSibling;
+    if (el.style.display === 'none') {
+      el.style.display = 'block';
+      btn.textContent = '− Hide coffin options';
+    } else {
+      el.style.display = 'none';
+      btn.textContent = '+ Tell me more about coffin options';
+    }
+  }
+
+  function toggleMoreInfo2(id, btn, label) {
+    const el = document.getElementById(id);
+    if (el.style.display === 'none') {
+      el.style.display = 'block';
+      btn.textContent = '− Hide information';
+    } else {
+      el.style.display = 'none';
+      btn.textContent = '+ Tell me more about ' + label;
+    }
+  }
+
+  function selectBurial(btn, type) {
+    select(btn, type === 'unsure' ? 'unsure' : 'yes');
+    document.getElementById('ashes-field').style.display = type === 'Cremation' ? 'block' : 'none';
+    document.getElementById('burial-field').style.display = type === 'Burial' ? 'block' : 'none';
+    if (type === 'unsure') toggleNote(btn);
+  }
+
+  function addSong() {
+    const list = document.getElementById('music-list');
+    const count = list.querySelectorAll('input').length + 1;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'field-input';
+    input.placeholder = 'Song ' + count + ' — optional';
+    input.style.marginBottom = '10px';
+    list.appendChild(input);
+  }
+
+  function showPanel(index) {
+    document.querySelectorAll('.panel').forEach((p, i) => {
+      p.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      t.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.remove('active', 'done');
+      if (i === index) d.classList.add('active');
+      else if (i < index) d.classList.add('done');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function select(btn, type) {
+    const siblings = btn.parentElement.querySelectorAll('.option-btn');
+    siblings.forEach(s => {
+      s.classList.remove('selected-yes', 'selected-no', 'selected-unsure');
+    });
+    btn.classList.add('selected-' + type);
+
+    // Hide all not-sure notes in this field group
+    const group = btn.closest('.field-group');
+    if (group) {
+      group.querySelectorAll('.not-sure-note').forEach(n => n.classList.remove('visible'));
+    }
+  }
+
+  function toggleNote(btn) {
+    const group = btn.closest('.field-group');
+    if (group) {
+      const note = group.querySelector('.not-sure-note');
+      if (note) note.classList.add('visible');
+    }
+  }
+</script>
+</body>
+</html>
